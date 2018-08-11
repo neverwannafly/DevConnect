@@ -36,7 +36,7 @@ const ProfileSchema = new Schema({
         type: String,
         required: false,
     },
-    github: {
+    githubusername: {
         type: String,
         required: false,
     },
