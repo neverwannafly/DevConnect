@@ -14,11 +14,11 @@ mongoose.connect(db, {
 }).then(() => {
     console.log('MongoDB Connected')
 }).catch(err => {
-    console.log(err)
+    console.log(err);
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello World!!')
+    res.send('Hello World!!');
 });
 
 // Use routes
@@ -29,5 +29,5 @@ app.use('/api/posts', posts);
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
+    console.log(`Server running on port ${port}`);
 });
