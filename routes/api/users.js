@@ -7,6 +7,7 @@ const passport = require('passport');
 
 // Load Input Validation
 const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 
 const router = express.Router();
 
@@ -41,9 +42,8 @@ router.post('/register', (req, res) => {
         email: req.body.email
     }).then(user => {
         if (user) {
-            return res.status(400).json({
-                email: "Email Already Exists!"
-            });
+            errors.email = 'Email Already Exists!'
+            return res.status(400).json(errors);
         } else {
             const newUser = new User({
                 name: req.body.name,
@@ -75,17 +75,27 @@ router.post('/register', (req, res) => {
 // @desc    Login user and return a JWT token
 // @access  Public route
 router.post('/login', (req, res) => {
+
+    const {
+        errors,
+        isValid
+    } = validateLoginInput(req.body);
+
     const email = req.body.email;
     const password = req.body.password;
+
+    // Check Validation
+    if (!isValid) {
+        return res.status('400').json(errors);
+    }
 
     // Find user by Email
     User.findOne({
         email: email
     }).then(user => {
         if (!user) {
-            return res.status('404').json({
-                email: 'User not found!'
-            });
+            errors.email = 'User Not Found';
+            return res.status('404').json(errors);
         }
 
         // Check Password
@@ -109,9 +119,8 @@ router.post('/login', (req, res) => {
                     });
                 });
             } else {
-                return res.status('400').json({
-                    password: "Invalid Password"
-                });
+                errors.password = 'Password Incorrect';
+                return res.status('400').json(errors);
             }
         });
 
