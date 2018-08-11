@@ -16,7 +16,7 @@ router.get('/test', (req, res) => {
     });
 });
 
-// @route   GET api/users/register
+// @route   POST api/users/register
 // @desc    Register user 
 // @access  Public route
 router.post('/register', (req, res) => {
@@ -50,9 +50,41 @@ router.post('/register', (req, res) => {
                     });
                 });
             });
-
         }
-    })
-})
+    });
+});
+
+// @route   POST api/users/login
+// @desc    Login user and return a JWT token
+// @access  Public route
+router.post('/login', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // Find user by Email
+    User.findOne({
+        email: email
+    }).then(user => {
+        if (!user) {
+            return res.status('404').json({
+                email: 'User not found!'
+            });
+        }
+
+        // Check Password
+        bcrypt.compare(password, user.password).then(isMatch => {
+            if (isMatch) {
+                res.json({
+                    msg: 'Success'
+                });
+            } else {
+                return res.status('400').json({
+                    password: "Invalid Password"
+                });
+            }
+        });
+
+    });
+});
 
 module.exports = router
