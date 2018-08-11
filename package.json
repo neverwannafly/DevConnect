@@ -1,0 +1,11 @@
+{
+  "name": "devconnect",
+  "version": "1.0.0",
+  "description": "Social Network webapp for developers",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shubham Anand",
+  "license": "MIT"
+}
