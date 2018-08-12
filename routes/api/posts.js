@@ -4,6 +4,7 @@ const passport = require('passport');
 const Post = require('./../../models/Post');
 const Profile = require('./../../models/Profile');
 const validatePostInput = require('../../validation/post');
+const validateCommentInput = require('../../validation/comment');
 
 const router = express.Router();
 
@@ -149,23 +150,87 @@ router.post('/unlike/:id', passport.authenticate('jwt', {
 
     Post.findById(req.params.id).then(post => {
         // Check if user has already liked the post
-        if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
-
-            // Get remove Index
-            const removeIndex = post.likes.map(item => item.user.toString()).indexOf(req.user.id);
-            post.likes.splice(removeIndex, 1);
-
-            post.save().then(post => {
-                return res.json(post);
-            });
-
+        if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+            errors.notliked = 'User hasnt liked the post!';
+            return res.status('400').json(errors);
         }
 
-        errors.notliked = 'User hasnt liked the post!';
-        return res.status('400').json(errors);
+        // Get remove Index
+        const removeIndex = post.likes.map(item => item.user.toString()).indexOf(req.user.id);
+        post.likes.splice(removeIndex, 1);
+
+        post.save().then(post => {
+            return res.json(post);
+        });
 
     }).catch(() => {
         errors.postnotfound = "This post doesnt exist!"
+        return res.status('404').json(errors);
+    });
+});
+
+// @route   POST api/posts/comment/:id
+// @desc    Add Comment to a Post
+// @access  Private
+router.post('/comment/:id', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+
+    const {
+        errors,
+        isValid
+    } = validateCommentInput(req.body);
+
+    if (!isValid) {
+        return res.status('400').json(errors);
+    }
+
+    Post.findById(req.params.id).then(post => {
+        const newComment = {
+            text: req.body.text,
+            name: req.body.name,
+            avatar: req.body.avatar,
+            user: req.user.id,
+        };
+
+        // Add to comments array
+        post.comments.unshift(newComment);
+        post.save().then(post => {
+            return res.json(post);
+        });
+
+    }).catch(() => {
+        errors.nopostfound = 'Such a Post wasnt found!';
+        return res.status('404').json(errors);
+    });
+});
+
+// @route   DELETE api/posts/comment/:id/:comment_id
+// @desc    Delete a comment from post
+// @access  Private
+router.delete('/comment/:id/:comment_id', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+
+    const errors = {};
+
+    Post.findById(req.params.id).then(post => {
+
+        // Check if comment exists
+        if (post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+            errors.commentnotfound = 'Comment doesn\'t exist';
+            return res.status('404').json(errors);
+        }
+
+        // Delete the comment
+        const removeIndex = post.comments.map(item => item._id.toString()).indexOf(req.params.comment_id);
+        post.comments.splice(removeIndex, 1);
+        post.save().then(post => {
+            return res.json(post);
+        });
+
+    }).catch(() => {
+        errors.nopostfound = 'Such a Post wasnt found!';
         return res.status('404').json(errors);
     });
 });
