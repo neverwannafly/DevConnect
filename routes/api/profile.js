@@ -260,7 +260,7 @@ router.post('/education', passport.authenticate('jwt', {
     });
 });
 
-// @route   POST api/profile/experience/:id
+// @route   DELETE api/profile/experience/:id
 // @desc    Delete experience from profile by id
 // @access  Private
 router.delete('/experience/:exp_id', passport.authenticate('jwt', {
@@ -288,7 +288,7 @@ router.delete('/experience/:exp_id', passport.authenticate('jwt', {
     });
 });
 
-// @route   POST api/profile/education/:id
+// @route   DELETE api/profile/education/:id
 // @desc    Delete education from profile by id
 // @access  Private
 router.delete('/education/:exp_id', passport.authenticate('jwt', {
@@ -314,6 +314,27 @@ router.delete('/education/:exp_id', passport.authenticate('jwt', {
             return res.status('404').json(err);
         });
     });
+});
+
+// @route   POST api/profile/
+// @desc    Delete user and profile
+// @access  Private
+router.delete('/', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+
+    Profile.findOneAndRemove({
+        user: req.user.id
+    }).then(() => {
+        User.findOneAndRemove({
+            _id: req.user.id
+        }).then(() => {
+            res.json({
+                'Success': true
+            });
+        });
+    });
+
 });
 
 module.exports = router
