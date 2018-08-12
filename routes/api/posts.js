@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
     Post.find().sort({
         date: -1
     }).then(posts => {
-        res.json(posts);
+        return res.json(posts);
     }).catch(() => {
         errors.nopostsfound = 'No posts found!';
         return res.status('404').json(err);
@@ -45,7 +45,7 @@ router.get('/:id', (req, res) => {
         res.json(posts);
     }).catch(() => {
         errors.nopostfound = 'No post found!';
-        res.status('404').json(errors);
+        return res.status('404').json(errors);
     });
 
 });
@@ -70,11 +70,11 @@ router.delete('/:id', passport.authenticate('jwt', {
         post.remove().then(() => {
             res.json({
                 'success': true
-            })
-        }).catch(() => {
-            errors.postnotfound = "This post doesnt exist!"
-            return res.status('404').json(errors);
+            });
         });
+    }).catch(() => {
+        errors.postnotfound = "This post doesnt exist!"
+        return res.status('404').json(errors);
     });
 
 });
@@ -103,9 +103,71 @@ router.post('/', passport.authenticate('jwt', {
     });
 
     newPost.save().then(post => {
-        res.json(post);
+        return res.json(post);
     });
 
+});
+
+// @route   POST api/posts/like/:id
+// @desc    Like Post
+// @access  Private
+router.post('/like/:id', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+
+    const errors = {};
+
+    Post.findById(req.params.id).then(post => {
+        // Check if user has already liked the post
+        if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+            errors.alreadyliked = 'User already liked this post!';
+            return res.status('400').json(errors);
+        }
+
+        // Add user id to likes array
+        post.likes.unshift({
+            user: req.user.id
+        });
+        post.save().then(post => {
+            return res.json(post);
+        });
+
+    }).catch(() => {
+        errors.postnotfound = "This post doesnt exist!"
+        return res.status('404').json(errors);
+    });
+});
+
+// @route   POST api/posts/unlike/:id
+// @desc    Unike Post
+// @access  Private
+router.post('/unlike/:id', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+
+    const errors = {};
+
+    Post.findById(req.params.id).then(post => {
+        // Check if user has already liked the post
+        if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+
+            // Get remove Index
+            const removeIndex = post.likes.map(item => item.user.toString()).indexOf(req.user.id);
+            post.likes.splice(removeIndex, 1);
+
+            post.save().then(post => {
+                return res.json(post);
+            });
+
+        }
+
+        errors.notliked = 'User hasnt liked the post!';
+        return res.status('400').json(errors);
+
+    }).catch(() => {
+        errors.postnotfound = "This post doesnt exist!"
+        return res.status('404').json(errors);
+    });
 });
 
 module.exports = router
