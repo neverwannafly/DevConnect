@@ -3,8 +3,6 @@ const isEmpty = require('./isEmpty');
 
 module.exports = function validateLoginInput(data) {
 
-    console.log(data);
-
     let errors = {};
 
     data.handle = !isEmpty(data.handle) ? data.handle : '';
