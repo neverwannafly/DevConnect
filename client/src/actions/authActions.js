@@ -2,9 +2,9 @@ import { GET_ERRORS } from "./types";
 import axios from "axios";
 
 // Register
-export const registerUser = userData => dispatch => {
+export const registerUser = (userData, history) => dispatch => {
     axios.post("/api/users/register", userData).then(res => {
-
+        history.push('/dashboard');
     }).catch(err => {
         dispatch({
             type: GET_ERRORS,
@@ -12,10 +12,3 @@ export const registerUser = userData => dispatch => {
         });
     });
 };
-
-
-// this.setState({
-//     errors: err.response.data,
-//     password: "",
-//     password2: "",
-// });
