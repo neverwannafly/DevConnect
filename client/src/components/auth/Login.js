@@ -9,7 +9,7 @@ class Login extends Component {
       errors: {}
     };
     this.onChange = this.onChange.bind(this);
-    this.onSumbit = this.onSumbit.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onChange(event) {
@@ -18,7 +18,7 @@ class Login extends Component {
     });
   }
 
-  onSumbit(event) {
+  onSubmit(event) {
     event.preventDefault();
     const newUser = {
       email: this.state.email,
@@ -37,7 +37,7 @@ class Login extends Component {
               <p className="lead text-center">
                 Sign in to your DevConnector account
               </p>
-              <form onSubmit={this.onSumbit}>
+              <form onSubmit={this.onSubmit}>
                 <div className="form-group">
                   <input
                     type="email"
