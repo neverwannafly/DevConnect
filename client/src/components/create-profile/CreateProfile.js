@@ -53,6 +53,7 @@ class CreateProfile extends Component {
     event.preventDefault();
     const profileData = {
       handle: this.state.handle,
+      status: this.state.status,
       company: this.state.company,
       website: this.state.website,
       location: this.state.location,
@@ -231,6 +232,7 @@ class CreateProfile extends Component {
 }
 
 CreateProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 }
