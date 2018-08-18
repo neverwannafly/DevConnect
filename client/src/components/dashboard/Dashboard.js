@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCurrentProfile } from '../../actions/profileActions';
+import Spinner from '../common/spinner';
 
 class Dashboard extends Component {
 
@@ -10,12 +11,42 @@ class Dashboard extends Component {
   }
 
   render() {
+
+    const user = this.props.auth.user;
+    const { profile, loading } = this.props.profile;
+
+    let dashboardContent;
+
+    if (profile === null || loading === true) {
+      dashboardContent = <Spinner/>
+    } else {
+      dashboardContent = <h1>Hello</h1>
+    }
+
     return (
-      <div>
-        <h1>Dashboard</h1>
+      <div className="dashbaord">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12">
+              <h1 className="display-4">Dashboard</h1>
+              { dashboardContent }
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
 }
 
-export default connect(null, { getCurrentProfile })(Dashboard);
+Dashboard.propTypes = {
+  getCurrentProfile: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => ({
+  profile: state.profile,
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { getCurrentProfile })(Dashboard);
