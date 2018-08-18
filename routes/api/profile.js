@@ -130,7 +130,7 @@ router.post('/', passport.authenticate('jwt', {
 
     // Skills -> Split into an array (Comes as CSV)
     if (typeof req.body.skills !== 'undefined') {
-        profileFields.skills = req.body.skills.split(',');
+        profileFields.skills = req.body.skills.split(',').map(skill => skill.trim());
     }
 
     // Social
