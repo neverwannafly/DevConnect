@@ -73,7 +73,7 @@ class AddExperience extends Component {
               <Link to="/dashboard" className="btn btn-light">Go Back</Link>
               <h1 className="display-4 text-center">Add Experience</h1>
               <p className="lead text-center">Add any job or position that you've held in past or currently hold</p>
-              <small className="d-small pb-3">
+              <small className="d-block pb-3">
                 * denotes required fields
               </small>
               <form onSubmit={this.onSubmit}>
