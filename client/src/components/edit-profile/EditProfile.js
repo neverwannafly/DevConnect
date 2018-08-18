@@ -9,10 +9,6 @@ import InputGroup from "../common/InputGroup";
 import { createProfile, getCurrentProfile } from "../../actions/profileActions";
 import isEmpty from '../../validation/isEmpty';
 
-function normalizeInput(input) {
-  return isEmpty(input) === true ? "" : input;
-}
-
 class CreateProfile extends Component {
 
   constructor(props) {
@@ -40,6 +36,10 @@ class CreateProfile extends Component {
 
   };
 
+  normalizeInput(input) {
+    return isEmpty(input) === true ? "" : input;
+  }
+
   componentDidMount() {
       this.props.getCurrentProfile();
   }
@@ -57,19 +57,19 @@ class CreateProfile extends Component {
       const userHasSocialAccounts = Object.keys(profile.social).length > 0 ? true : false;
       this.setState({
         displaySocialInputs: userHasSocialAccounts,
-        handle: normalizeInput(profile.handle),
-        company: normalizeInput(profile.company),
-        website: normalizeInput(profile.website),
-        location: normalizeInput(profile.location),
-        status: normalizeInput(profile.status),
-        skills: normalizeInput(profile.skills.join(', ')),
-        githubusername: normalizeInput(profile.githubusername),
-        bio: normalizeInput(profile.bio),
-        twitter: normalizeInput(profile.social.twitter),
-        youtube: normalizeInput(profile.social.youtube),
-        facebook: normalizeInput(profile.social.facebook),
-        linkedin: normalizeInput(profile.social.linkedin),
-        instagram: normalizeInput(profile.social.instagram),
+        handle: this.normalizeInput(profile.handle),
+        company: this.normalizeInput(profile.company),
+        website: this.normalizeInput(profile.website),
+        location: this.normalizeInput(profile.location),
+        status: this.normalizeInput(profile.status),
+        skills: this.normalizeInput(profile.skills.join(', ')),
+        githubusername: this.normalizeInput(profile.githubusername),
+        bio: this.normalizeInput(profile.bio),
+        twitter: this.normalizeInput(profile.social.twitter),
+        youtube: this.normalizeInput(profile.social.youtube),
+        facebook: this.normalizeInput(profile.social.facebook),
+        linkedin: this.normalizeInput(profile.social.linkedin),
+        instagram: this.normalizeInput(profile.social.instagram),
       });
     }
   }
