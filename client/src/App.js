@@ -17,8 +17,10 @@ import "./App.css";
 import { clearCurrentProfile } from "./actions/profileActions";
 
 // Check for token
-if (localStorage.jwtToken) {
-  const token = localStorage.jwtToken
+
+if (localStorage['jwt-token']) {
+  console.log(localStorage);
+  const token = localStorage['jwt-token'];
   // Set auth token header auth
   setAuthToken(token);
   // Decode token and get user info
