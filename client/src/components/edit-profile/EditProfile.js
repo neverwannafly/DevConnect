@@ -40,6 +40,19 @@ class CreateProfile extends Component {
     return isEmpty(input) === true ? "" : input;
   }
 
+  extractSocialHandle(input) {
+    if (isEmpty(input)) {
+      return {
+        twitter: '',
+        youtube: '',
+        facebook: '',
+        linkedin: '',
+        instagram: '',
+      }
+    }
+    return input;
+  }
+
   componentDidMount() {
       this.props.getCurrentProfile();
   }
@@ -54,7 +67,9 @@ class CreateProfile extends Component {
     const profile = nextProps.profile.profile;
 
     if (profile) {
-      const userHasSocialAccounts = Object.keys(profile.social).length > 0 ? true : false;
+      let userHasSocialAccounts;
+      profile.social ? userHasSocialAccounts = true : userHasSocialAccounts = false;
+      const social = this.extractSocialHandle(profile.social);
       this.setState({
         displaySocialInputs: userHasSocialAccounts,
         handle: this.normalizeInput(profile.handle),
@@ -65,11 +80,11 @@ class CreateProfile extends Component {
         skills: this.normalizeInput(profile.skills.join(', ')),
         githubusername: this.normalizeInput(profile.githubusername),
         bio: this.normalizeInput(profile.bio),
-        twitter: this.normalizeInput(profile.social.twitter),
-        youtube: this.normalizeInput(profile.social.youtube),
-        facebook: this.normalizeInput(profile.social.facebook),
-        linkedin: this.normalizeInput(profile.social.linkedin),
-        instagram: this.normalizeInput(profile.social.instagram),
+        twitter: social.twitter,
+        youtube: social.youtube,
+        facebook: social.facebook,
+        linkedin: social.linkedin,
+        instagram: social.instagram,
       });
     }
   }
