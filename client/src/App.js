@@ -23,6 +23,7 @@ import "./App.css";
 import { clearCurrentProfile } from "./actions/profileActions";
 import Profile from "./components/profile/Profile";
 import NotFound from "./components/not-found/NotFound";
+import Posts from "./components/posts/Posts";
 
 // Check for token
 
@@ -64,6 +65,7 @@ class App extends Component {
               <Route exact path="/not-found/" component={NotFound} />
               <Switch>
                 <PrivateRoute exact path="/dashboard/" component={Dashboard} />
+                <PrivateRoute exact path="/feed/" component={Posts} />
                 <PrivateRoute exact path="/create-profile/" component={CreateProfile} />
                 <PrivateRoute exact path="/edit-profile/" component={EditProfile} />
                 <PrivateRoute exact path="/add-experience/" component={AddExperience} />
