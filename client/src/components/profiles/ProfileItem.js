@@ -17,7 +17,7 @@ class ProfileItem extends Component {
             <div className="col-lg-6 col-md-4 col-8">
                 <h3>{profile.user.name}</h3>
                 <p>
-                    {profile.status} { isEmpty(profile.company) ? "" : (<span>at ${profile.company}</span>) }
+                    {profile.status} { isEmpty(profile.company) ? "" : (<span>at {profile.company}</span>) }
                 </p>
                 <p>
                     { isEmpty(profile.location) ? null : (<span>{profile.location}</span>) }
