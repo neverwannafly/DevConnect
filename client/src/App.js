@@ -17,18 +17,18 @@ import EditProfile from "./components/edit-profile/EditProfile";
 import AddExperience from "./components/add-credentials/add-experience";
 import AddEducation from "./components/add-credentials/add-education";
 import Profiles from "./components/profiles/Profiles";
+import Profile from "./components/profile/Profile";
+import NotFound from "./components/not-found/NotFound";
+import Posts from "./components/posts/Posts";
+import Post from "./components/post/Post";
 import store from "./store";
 
 import "./App.css";
 import { clearCurrentProfile } from "./actions/profileActions";
-import Profile from "./components/profile/Profile";
-import NotFound from "./components/not-found/NotFound";
-import Posts from "./components/posts/Posts";
 
 // Check for token
 
 if (localStorage['jwt-token']) {
-  console.log(localStorage);
   const token = localStorage['jwt-token'];
   // Set auth token header auth
   setAuthToken(token);
@@ -46,7 +46,6 @@ if (localStorage['jwt-token']) {
     // Redirect to login
     window.location.href = '/login';
   }
-
 }
 
 class App extends Component {
@@ -70,6 +69,7 @@ class App extends Component {
                 <PrivateRoute exact path="/edit-profile/" component={EditProfile} />
                 <PrivateRoute exact path="/add-experience/" component={AddExperience} />
                 <PrivateRoute exact path="/add-education/" component={AddEducation} />
+                <PrivateRoute exact path="/post/:id" component={Post} />
               </Switch>
             </div>
             <Footer />
